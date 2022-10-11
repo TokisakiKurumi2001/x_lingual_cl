@@ -6,12 +6,14 @@ from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 class BertTwins(nn.Module):
     def __init__(
         self, teacher_model: str, vocab_size: int, num_hidden_layers: int,
-        num_attention_heads: int, intermediate_size: int
+        num_attention_heads: int, intermediate_size: int, pad_token_id: int,
+        classifier_dropout: float
     ):
         super(BertTwins, self).__init__()
         self.config = BertConfig(
             vocab_size = vocab_size, num_hidden_layers=num_hidden_layers,
-            num_attention_heads=num_attention_heads, intermediate_size=intermediate_size
+            num_attention_heads=num_attention_heads, intermediate_size=intermediate_size,
+            pad_token_id=pad_token_id, classifier_dropout=classifier_dropout
         )
         self.student_model = BertModel(self.config)
         self.teacher_model = DistilBertModel.from_pretrained(teacher_model)

@@ -7,12 +7,14 @@ from x_lingual_ot_cl import BertTwins
 class LitBertTwins(pl.LightningModule):
     def __init__(
         self, teacher_model: str, vocab_size: int, num_hidden_layers: int,
-        num_attention_heads: int, intermediate_size: int
+        num_attention_heads: int, intermediate_size: int, pad_token_id: int,
+        classifier_dropout: float
     ):
         super().__init__()
         self.bert_twins = BertTwins(
             teacher_model, vocab_size, num_hidden_layers,
-            num_attention_heads, intermediate_size
+            num_attention_heads, intermediate_size, pad_token_id,
+            classifier_dropout
         )
         self.ot_loss = SamplesLoss(loss="sinkhorn", p=2, blur=.05)
         self.main_loss = nn.CrossEntropyLoss()
