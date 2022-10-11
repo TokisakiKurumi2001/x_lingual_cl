@@ -15,6 +15,6 @@ if __name__ == "__main__":
     )
 
     # train model
-    trainer = pl.Trainer(max_epochs=1, logger=wandb_logger, devices=2, accelerator="gpu", strategy="ddp")
+    trainer = pl.Trainer(max_epochs=30, logger=wandb_logger, devices=2, accelerator="gpu", strategy="ddp")
     trainer.fit(model=lit_bert_twins, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
     lit_bert_twins.export_model("banabert_ot_cl/version5")
