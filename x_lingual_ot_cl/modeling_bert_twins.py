@@ -1,14 +1,23 @@
 import torch
 import torch.nn as nn
-from transformers import BertConfig, BertModel
+from transformers import BertConfig, BertModel, DistilBertModel
 from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 
 class BertTwins(nn.Module):
-    def __init__(self, teacher_model, student_tokenizer):
+    def __init__(
+        self, teacher_model: str, vocab_size: int, num_hidden_layers: int,
+        num_attention_heads: int, intermediate_size: int
+    ):
         super(BertTwins, self).__init__()
-        self.config = BertConfig(vocab_size = student_tokenizer.vocab_size, num_hidden_layers=12, num_attention_heads=8, intermediate_size=1024)
+        self.config = BertConfig(
+            vocab_size = vocab_size, num_hidden_layers=num_hidden_layers,
+            num_attention_heads=num_attention_heads, intermediate_size=intermediate_size
+        )
         self.student_model = BertModel(self.config)
-        self.teacher_model = teacher_model
+        self.teacher_model = DistilBertModel.from_pretrained(teacher_model)
+        for p in self.teacher_model.parameters():
+            p.requires_grad = False
+
         self.mlm_head = BertOnlyMLMHead(self.config)
 
     def export_model(self, path):

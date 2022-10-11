@@ -2,14 +2,22 @@ import torch
 import torch.nn as nn
 from geomloss import SamplesLoss
 import pytorch_lightning as pl
+from x_lingual_ot_cl import BertTwins
 
 class LitBertTwins(pl.LightningModule):
-    def __init__(self, bert_twins):
+    def __init__(
+        self, teacher_model: str, vocab_size: int, num_hidden_layers: int,
+        num_attention_heads: int, intermediate_size: int
+    ):
         super().__init__()
-        self.bert_twins = bert_twins
+        self.bert_twins = BertTwins(
+            teacher_model, vocab_size, num_hidden_layers,
+            num_attention_heads, intermediate_size
+        )
         self.ot_loss = SamplesLoss(loss="sinkhorn", p=2, blur=.05)
         self.main_loss = nn.CrossEntropyLoss()
         self.consine = nn.CosineSimilarity(dim=1, eps=1e-8)
+        self.save_hyperparameters()
 
     def export_model(self, path):
         self.bert_twins.export_model(path)
