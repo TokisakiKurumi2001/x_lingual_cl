@@ -3,8 +3,7 @@ import pytorch_lightning as pl
 from x_lingual_ot_cl import LitBertTwins, student_tokenizer, train_dataloader, valid_dataloader
 
 if __name__ == "__main__":
-    # wandb_logger = WandbLogger(project="proj_x_lingual_ot_cl")
-    wandb_logger = WandbLogger(project="proj_dummy")
+    wandb_logger = WandbLogger(project="proj_x_lingual_ot_cl")
 
     # model
     teacher_ckpt = "sentence-transformers/distiluse-base-multilingual-cased"
