@@ -1,0 +1,8 @@
+{
+  "cls_token": "<cls>",
+  "mask_token": "<mask>",
+  "pad_token": "<pad>",
+  "sep_token": "<sep>",
+  "tokenizer_class": "PreTrainedTokenizerFast",
+  "unk_token": "<unk>"
+}
