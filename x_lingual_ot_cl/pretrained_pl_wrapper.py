@@ -2,20 +2,12 @@ import torch
 import torch.nn as nn
 from geomloss import SamplesLoss
 import pytorch_lightning as pl
-from x_lingual_ot_cl import BertTwins
+from x_lingual_ot_cl import PretrainedBertTwins
 
-class LitBertTwins(pl.LightningModule):
-    def __init__(
-        self, teacher_model: str, vocab_size: int, num_hidden_layers: int,
-        num_attention_heads: int, intermediate_size: int, pad_token_id: int,
-        classifier_dropout: float, use_ot: bool=True, use_cl: bool=True,
-    ):
-        super().__init__()
-        self.bert_twins = BertTwins(
-            teacher_model, vocab_size, num_hidden_layers,
-            num_attention_heads, intermediate_size, pad_token_id,
-            classifier_dropout
-        )
+class LitPretrainedBertTwins(pl.LightningModule):
+    def __init__(self, teacher_model: str, student_model: str, use_ot: bool=True, use_cl: bool=True):
+        super(LitPretrainedBertTwins, self).__init__()
+        self.bert_twins = PretrainedBertTwins(teacher_model, student_model)
         self.use_ot = use_ot
         self.use_cl = use_cl
         self.main_loss = nn.CrossEntropyLoss()

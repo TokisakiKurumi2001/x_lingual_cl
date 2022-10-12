@@ -1,22 +1,14 @@
 import torch
 import torch.nn as nn
-from transformers import BertConfig, BertModel, DistilBertModel
+from transformers import BertModel, DistilBertModel
 from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 
-class BertTwins(nn.Module):
-    def __init__(
-        self, teacher_model: str, vocab_size: int, num_hidden_layers: int,
-        num_attention_heads: int, intermediate_size: int, pad_token_id: int,
-        classifier_dropout: float
-    ):
-        super(BertTwins, self).__init__()
-        self.config = BertConfig(
-            vocab_size = vocab_size, num_hidden_layers=num_hidden_layers,
-            num_attention_heads=num_attention_heads, intermediate_size=intermediate_size,
-            pad_token_id=pad_token_id, classifier_dropout=classifier_dropout
-        )
-        self.student_model = BertModel(self.config)
-        self.teacher_model = DistilBertModel.from_pretrained(teacher_model)
+class PretrainedBertTwins(nn.Module):
+    def __init__(self, teacher_ckpt: str, student_ckpt: str):
+        super(PretrainedBertTwins, self).__init__()
+        self.student_model = BertModel.from_pretrained(student_ckpt)
+        self.config = self.student_model.config
+        self.teacher_model = DistilBertModel.from_pretrained(teacher_ckpt)
         for p in self.teacher_model.parameters():
             p.requires_grad = False
 
