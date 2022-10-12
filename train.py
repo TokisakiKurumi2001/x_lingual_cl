@@ -11,6 +11,6 @@ if __name__ == "__main__":
     lit_bert_twins = LitPretrainedBertTwins(teacher_ckpt, student_ckpt)
 
     # train model
-    trainer = pl.Trainer(max_epochs=50, logger=wandb_logger, devices=2, accelerator="gpu", strategy="ddp")
+    trainer = pl.Trainer(max_epochs=10, logger=wandb_logger, devices=2, accelerator="gpu", strategy="ddp")
     trainer.fit(model=lit_bert_twins, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
     lit_bert_twins.export_model(f"banabert_pretrained")
